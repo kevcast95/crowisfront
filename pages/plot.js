@@ -2,31 +2,18 @@ import React, {Component} from 'react'
 import Head from 'next/head'
 import Nav from '../components/nav'
 import { withRouter } from 'next/router';
+import Chart from 'chart.js';
 
-class Login extends Component {
+class Plot extends Component {
   constructor(props) {
     super(props);
     this.state={
         user: '',
         pass: '',
     } 
+    this.plot = this.plot.bind(this)
+    this.getPlot = this.getPlot.bind(this)
     this.onChangeField = this.onChangeField.bind(this)
-    this.Login = this.Login.bind(this)
-  }
-  Login(){
-    const user = this.state.user
-    const pass = this.state.pass
-    fetch(`http://167.99.15.34:5000/login/${user}/${pass}`,{
-      method: 'GET',
-      headers: {
-        'Content-Type':'application/json'
-      }
-    }).then(auth=>auth.json())
-    .then(response=>{
-      console.log('response:', response.loging);
-      this.props.router.push('/plot');
-      
-    })
   }
   onChangeField(text, field = null) {
     if (field) {
@@ -36,33 +23,75 @@ class Login extends Component {
     }
     
   }
+  getPlot(){
+    const user = this.state.user
+    const pass = this.state.pass
+    fetch(`http://167.99.15.34:5000/main_plot/${user}`,{
+      method: 'GET',
+      headers: {
+        'Content-Type':'application/json'
+      }
+    }).then(auth=>auth.json())
+    .then(response=>{
+      this.plot(response)
+    })
+    
+  }
+  plot(response){
+    console.log('responsePlot:', response);
+    var ctx = document.getElementById('myChart');
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: response.x,
+            datasets: [{
+                label: response.name,
+                data: response.y,
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+  }
+  
   render(){
     return(
       <div>
         <Head>
-          <title>Home</title>
+          <title>Plot</title>
           <link rel="icon" href="/favicon.ico" />
         </Head>
 
         <div className="container">
-          <form style={{marginBottom:'10px'}} >
             <input type='text' className='input-form' placeholder='User'
-              onChange={(e)=> this.onChangeField(e.target.value, 'user')}
+                onChange={(e)=> this.onChangeField(e.target.value, 'user')}
             />
-            <input type='password' className='input-form' placeholder='Password'
-              onChange={(e)=> this.onChangeField(e.target.value, 'pass')}
-            />
-            <span onClick={this.Login} className='btn-sign-up'>
+            <span onClick={this.getPlot} className='btn-sign-up'>
               log in
             </span>
-          </form>
+            <canvas id="myChart" width="400" height="400"></canvas>
         </div>
 
         <style jsx>{`
           .container{
             margin: 0;
             padding: 0;
-            background: grey;
           }
           form {
             width: 40%;
@@ -98,4 +127,4 @@ class Login extends Component {
   }
 }
 
-export default withRouter(Login )
+export default withRouter(Plot)
