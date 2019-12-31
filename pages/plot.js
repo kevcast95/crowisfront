@@ -26,7 +26,7 @@ class Plot extends Component {
   getPlot(){
     const user = this.state.user
     const pass = this.state.pass
-    fetch(`http://167.99.15.34:5000/main_plot/${user}`,{
+    fetch(`http://167.99.15.34:8000/api/main_plot/${user}`,{
       method: 'GET',
       headers: {
         'Content-Type':'application/json'

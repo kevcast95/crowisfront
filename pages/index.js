@@ -2,6 +2,8 @@ import React, {Component} from 'react'
 import Head from 'next/head'
 import Nav from '../components/nav'
 import { withRouter } from 'next/router';
+import ReactTooltip from 'react-tooltip';
+import logo_eca from './../components/img/eca_new_logo.png'
 
 class Login extends Component {
   constructor(props) {
@@ -16,7 +18,7 @@ class Login extends Component {
   Login(){
     const user = this.state.user
     const pass = this.state.pass
-    fetch(`http://167.99.15.34:5000/login/${user}/${pass}`,{
+    fetch(`http://167.99.15.34:8000/login/${user}/${pass}`,{
       method: 'GET',
       headers: {
         'Content-Type':'application/json'
@@ -38,13 +40,17 @@ class Login extends Component {
   }
   render(){
     return(
-      <div>
+      <div className="container">
         <Head>
           <title>Home</title>
           <link rel="icon" href="/favicon.ico" />
+          <link href="https://fonts.googleapis.com/css?family=Roboto|Nunito:200,300,400,600,700,800,900&display=swap" rel="stylesheet" />
         </Head>
 
-        <div className="container">
+        <div className='login-container'>
+        <ReactTooltip />
+          <img className='logo_eca' src={logo_eca} />
+          <h1 data-tip="Optimización y Mantenimiento de la Agenda" className='oma'>O M A</h1>
           <form style={{marginBottom:'10px'}} >
             <input type='text' className='input-form' placeholder='User'
               onChange={(e)=> this.onChangeField(e.target.value, 'user')}
@@ -53,26 +59,49 @@ class Login extends Component {
               onChange={(e)=> this.onChangeField(e.target.value, 'pass')}
             />
             <span onClick={this.Login} className='btn-sign-up'>
-              log in
+              Iniciar Sesión
             </span>
           </form>
         </div>
 
         <style jsx>{`
           .container{
-            margin: 0;
-            padding: 0;
-            background: grey;
+            height: 100vh;
+            background: #F2F2F2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            align-content: center;
           }
-          form {
-            width: 40%;
-            margin: 20px auto;
-            padding: 30px 0;
+          .login-container{
+            width: 25%;
+            padding: 10px;
             display: flex;
             flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            align-content: center;
+            background: white;
+            border-radius: 6px;
+            -webkit-box-shadow: 5px 3px 19px -2px rgba(0,0,0,0.75);
+          }
+          .logo_eca {
+            margin: 20px 30px;
+            width: 250px;
+          }
+          .oma {
+            font-family: Nunito;
+            color: grey;
+            cursor: pointer;
+          }
+          form {
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+           
           }
           .input-form {
-            border: 0;
+            border: solid 1px #F2F2F2;
             outline: none;
             height: 40px;
             font-style: normal;
@@ -81,16 +110,24 @@ class Login extends Component {
             line-height: 28px;
             background: #FFFFFF;
             border-radius: 4px;
-            margin: 6px 0px;
+            margin: 8px 0px;
             padding: 0px 15px;
           }
           .btn-sign-up {
+            margin: 20px auto;
+            width: 130px;
             height: 38px;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: #263D6D;
+            background: #007bff;
             border-radius: 20px;
+            color: white;
+            font-family: Nunito;
+        }
+        .btn-sign-up:hover {
+            cursor: pointer;
+            opacity: 0.7;
         }
         `}</style>
       </div>
